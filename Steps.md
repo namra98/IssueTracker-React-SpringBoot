@@ -116,3 +116,78 @@ export default Users;
 ```
 
 
+5. Add User Page
+```jsx
+
+import React, { useState } from 'react';
+function AddUser() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState(''); 
+    const [role, setRole] = useState('');
+
+    function handleSubmit(e) {
+        // prevent the default form submission
+        e.preventDefault();
+        console.log('Name:', name);
+        console.log('Email:', email);
+        console.log('Role:', role); 
+        fetch('http://localhost:8080/register',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, role }),
+            }
+        )
+        // everything is ok.
+        .then((response) => response.json())
+        .then(() => window.alert('User added successfully!'))
+        // if there is an error.
+        .catch((error) => console.error('Error:', error))
+        // finally clear the form.
+        .finally(() => {
+            // clear the form
+        });
+    }
+
+    return (
+        <div>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="name">Name:</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="role">Role:</label>
+                    <input
+                        type="text"
+                        id="role"
+                        name="role"
+                        onChange={(e) => setRole(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit">Submit</button>
+                </form>
+        </div>
+    )
+}
+
+export default AddUser;
+```
+
