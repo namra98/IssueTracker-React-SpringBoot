@@ -1,5 +1,16 @@
 
 Steps:
+0. Allow requests from react to spring boot - CORS error.
+Add this Annotation on Spring boot controller.
+```java
+@RestController
+@CrossOrigin(origins = "http://localhost:3000") <------------// Allow requests from React
+@RequestMapping("/issues")
+public class IssueController {
+    private final IssueService issueService;
+
+```
+
 1. Create new react project for your project.
 **> npx create-react-app issue-tracker-frontend**
 
