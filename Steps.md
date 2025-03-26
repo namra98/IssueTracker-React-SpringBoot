@@ -3,7 +3,12 @@ Steps:
 1. Create new react project for your project.
 **> npx create-react-app issue-tracker-frontend**
 
-2. Create basic component and use rediarection.
+2. Start app using
+```bash
+npm start
+```
+
+4. Create basic component and use rediarection.
 **in Task.js**
 ```jsx
 function Task() {
