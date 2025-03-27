@@ -43,3 +43,71 @@
         return ResponseEntity.ok(users);
     }
 ```
+
+### WebMvcConfigurer.java
+```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private AuthInterceptor authInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry)
+    {
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/users", "/users/**")
+                .excludePathPatterns("/session/login");
+    }
+}
+```
+
+### AuthInterceptor.java
+```java
+package com.example.demo;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.hibernate.Interceptor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+@Component
+public class AuthInterceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler
+    ) throws Exception
+    {
+        var session = request.getSession(false);
+        if(session == null) {
+            response.setStatus(401);
+            response.getWriter().write("UNAUTHORIZED from INTERCEPTOR");
+            return false;
+        }
+        var usernameData = session.getAttribute("username");
+        if(usernameData == null)
+        {
+            response.setStatus(401);
+            response.getWriter().write("UNAUTHORIZED from INTERCEPTOR");
+            return false;
+        }
+        return true;
+    }
+
+}
+```
